@@ -1,3 +1,5 @@
+// Part One
+
 const calculatePosition = inputString => inputString.split('\n')
   .reduce((total, el) => {
     if(!el) return total
@@ -10,6 +12,8 @@ const calculatePosition = inputString => inputString.split('\n')
       : [ total[0], total[1] + magnitude]
   }, [0, 0])
   .reduce((total, el) => total * el, 1)
+
+// Part Two
 
 const calculateAccuratePosition = inputString => inputString.split('\n')
   .reduce((total, el) => {
