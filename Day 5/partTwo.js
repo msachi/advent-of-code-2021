@@ -1,55 +1,25 @@
 const { run, testRun } = require('../helpers')
 
-const swapArrayElements = array => {
-  let temp = array[1]
-  array[1] = array[0]
-  array[0] = temp
-  return array
-}
-
 const getPointsCovered = line => {
   const points = []
+  const [ x1, y1, x2, y2 ] = line
 
-  const isVertical = line[0][0] == line[1][0]
-  if(isVertical) {
-    const isIncreasing = line[0][1] < line[1][1]
-    if(!isIncreasing) {
-      swapArrayElements(line)
-    }
-    for(let i = line[0][1]; i <= line[1][1]; i++) {
-      points.push([line[0][0], i])
+  if(x2 - x1 == 0) {
+    for(let i = Math.min(y1, y2); i <= Math.max(y1, y2); i++) {
+      points.push([x1, i])
     }
   }
-  const isHorizontal = line[0][1] == line[1][1]
-  if(isHorizontal) {
-    const isIncreasing = line[0][0] < line[1][0]
-    if(!isIncreasing) {
-      swapArrayElements(line)
-    }
-    for(let i = line[0][0]; i <= line[1][0]; i++) {
-      points.push([i, line[0][1]])
-    }
-  }
-
-  const isDownwardsDiagonal = line[0][0] < line[1][0] && line[0][1] < line[1][1]
-  const isDownwardsDiagonalRev = line[0][0] > line[1][0] && line[0][1] > line[1][1]
-  if(isDownwardsDiagonal || isDownwardsDiagonalRev) {
-    if(isDownwardsDiagonalRev) {
-      swapArrayElements(line)
-    }
-    for(let i = 0; i <= line[1][0] - line[0][0]; i++) {
-      points.push([line[0][0]+i, line[0][1]+i])
-    }
-  }
-
-  const isUpwardsDiagonal = line[0][0] < line[1][0] && line[0][1] > line[1][1]
-  const isUpwardsDiagonalRev = line[0][0] > line[1][0] && line[0][1] < line[1][1]
-  if(isUpwardsDiagonal || isUpwardsDiagonalRev) {
-    if(isUpwardsDiagonalRev) {
-      swapArrayElements(line)
-    }
-    for(let i = 0; i <= line[1][0] - line[0][0]; i++) {
-      points.push([line[0][0]+i, line[0][1]-i])
+  else {
+    for(let i = Math.min(x1, x2); i <= Math.max(x1, x2); i++) {
+      if(y2 - y1 == 0) {
+        points.push([i, y1])
+      }
+      else if(y2 - y1 == x2 - x1) {
+        points.push([i, Math.min(y1, y2) + i - Math.min(x1, x2)])
+      }
+      else {
+        points.push([i, Math.max(y1, y2) - i + Math.min(x1, x2)])
+      }
     }
   }
 
@@ -66,8 +36,8 @@ const markDiagram = (diagram, points) => {
 const getResult = input => {
   const lineList = input.map(line => line
     .split(' -> ').map(pair => pair
-      .split(',').map(coor => parseInt(coor))))
-  
+      .split(',').map(coor => parseInt(coor))).flat())
+
   let diagram = []
   for(let i = 0; i < 1000; i++) {
     diagram.push(new Array(1000).fill(0))
