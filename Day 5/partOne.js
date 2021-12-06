@@ -4,12 +4,12 @@ const getPointsCovered = line => {
   const points = []
   const [ x1, y1, x2, y2 ] = line
 
-  if(y2 - y1) {
+  if(x2 - x1 == 0) {
     for(let i = Math.min(y1, y2); i <= Math.max(y1, y2); i++) {
       points.push([x1, i])
     }
   }
-  if(x2 - x1) {
+  if(y2 - y1 == 0) {
     for(let i = Math.min(x1, x2); i <= Math.max(x1, x2); i++) {
       points.push([i, y1])
     }
@@ -29,15 +29,12 @@ const getResult = input => {
     .split(' -> ').map(pair => pair
       .split(',').map(coor => parseInt(coor))).flat())
 
-  const validLines = lineList.filter(line =>
-    line[0] == line[2] || line[1] == line[3])
-
   let diagram = []
   for(let i = 0; i < 1000; i++) {
     diagram.push(new Array(1000).fill(0))
   }
 
-  validLines.forEach(line => {
+  lineList.forEach(line => {
     const pointsCovered = getPointsCovered(line)
     diagram = markDiagram(diagram, pointsCovered)
   })
